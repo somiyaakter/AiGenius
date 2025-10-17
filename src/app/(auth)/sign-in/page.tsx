@@ -48,7 +48,7 @@ export default function SignIn() {
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-sm">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">Sign in</h1>
-          <p className="mt-1 text-sm text-gray-600">to continue to Genius</p>
+          <p className="mt-1 text-sm text-gray-600">to continue to AIGenius</p>
         </div>
 
         <Button
