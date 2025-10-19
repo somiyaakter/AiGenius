@@ -15,6 +15,10 @@ import { useRouter } from "next/navigation";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import Heading from "@/components/heading";
 import Empty from "@/components/empty";
+import Loader from "@/components/loader";
+import { cn } from "@/lib/utils";
+import UserAvatar from "@/components/user-avatar";
+import BotAvatar from "@/components/bot-avatar";
 
 export default function ConversationPage() {
   const router = useRouter();
@@ -97,13 +101,23 @@ export default function ConversationPage() {
         </div>
 
         <div className="space-y-4 my-4">
-          {messages.length === 0 && !isLoading && <Empty label="No conversation started" />}
+
+          {isLoading && (
+            <div className="flex items-center justify-center p-8 rounded-lg bg-muted">
+              <Loader />
+            </div>
+          )}
+
+          {messages.length === 0 && !isLoading && <Empty label="No conversation started." />}
           <div className="flex flex-col-reverse gap-y-4">
+
+
             {messages.map((message, index) => (
-              <div key={index}>
+              <div key={index} className={cn("p-8 rounded-lg", message.role === "user" ? "bg-white border border-black/10" : "bg-muted")}>
                 <p>
                   <b>{message.role}:</b> {String(message.content)}
                 </p>
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
               </div>
             ))}
           </div>
