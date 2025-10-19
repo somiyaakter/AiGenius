@@ -1,25 +1,26 @@
 "use client";
-import React from "react";
-import Heading from "@/features/conversation/components/heading";
+import React, { useState } from "react";
+import axios from "axios";
+
 import { MessageCircle } from "lucide-react";
-import {useForm } from "react-hook-form";
-import { formSchema } from "@/features/conversation/validations/constant";
+import { useForm } from "react-hook-form";
+import { formSchema } from "./constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import Heading from "@/components/heading";
+import Empty from "@/components/empty";
 
+export default function ConversationPage() {
+  const router = useRouter();
 
+  const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
 
-
-export default function Conversation() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,13 +28,30 @@ export default function Conversation() {
     },
   });
 
-
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-  };
+    try {
+      const userMessage: ChatCompletionMessageParam = {
+        role: "user",
+        content: values.prompt,
+      };
 
+      const newMessages = [...messages, userMessage];
+
+      const response = await axios.post("/api/conversation", {
+        messages: newMessages,
+      });
+
+      setMessages((prev) => [...prev, userMessage, response.data]);
+      form.reset();
+    } catch (error) {
+      // TODO: open true modal
+      console.log(error);
+    } finally {
+      router.refresh();
+    }
+  };
 
   return (
     <div>
@@ -54,10 +72,7 @@ export default function Conversation() {
               <FormField
                 name="prompt"
                 render={({ field }) => (
-                  <FormItem
-                    className="col-span-12 lg:col-span-10"
-                  >
-                   
+                  <FormItem className="col-span-12 lg:col-span-10">
                     <FormControl className="m-0 p-0">
                       <Input
                         disabled={isLoading}
@@ -66,13 +81,13 @@ export default function Conversation() {
                         {...field}
                       />
                     </FormControl>
-                   
                   </FormItem>
                 )}
               />
 
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="col-span-12 lg:col-span-2 w-full"
               >
                 Generate
@@ -81,10 +96,17 @@ export default function Conversation() {
           </Form>
         </div>
 
-
-
         <div className="space-y-4 my-4">
-          Message Content
+          {messages.length === 0 && !isLoading && <Empty label="No conversation started" />}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message, index) => (
+              <div key={index}>
+                <p>
+                  <b>{message.role}:</b> {String(message.content)}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
