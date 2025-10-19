@@ -47,11 +47,6 @@ const tools = [
     color: "text-blue-400",
     bgColor: "bg-blue-400/10",
   },
-
-
-
-
-  
 ];
 
 export default function Dashboard() {
