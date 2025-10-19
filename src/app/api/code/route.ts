@@ -1,10 +1,18 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+
+const instructionMessages: ChatCompletionMessageParam = {
+  role: "system",
+  content: "You are a helpful assistant...",
+};
+
 
 export async function POST(req: Request) {
   try {
@@ -16,8 +24,6 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    
-
     const { messages } = await req.json();
 
     if (!messages) {
@@ -25,8 +31,8 @@ export async function POST(req: Request) {
     }
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
+      model: "gpt-5",
+      messages: [instructionMessages, ...messages],
     });
 
     return NextResponse.json(response.choices[0].message);
@@ -35,4 +41,3 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
-
