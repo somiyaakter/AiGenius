@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
 import { formSchema } from "./constant";
-
+import ReactMarkdown from "react-markdown";
 export default function CodePage() {
   const router = useRouter();
 
@@ -119,6 +119,8 @@ export default function CodePage() {
                   <b>{message.role}:</b> {String(message.content)}
                 </p>
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+
+                <ReactMarkdown>{String(message.content) || ""}</ReactMarkdown>
               </div>
             ))}
           </div>
