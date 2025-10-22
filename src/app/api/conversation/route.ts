@@ -16,7 +16,6 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    
 
     const { messages } = await req.json();
 

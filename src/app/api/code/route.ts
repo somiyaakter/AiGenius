@@ -7,12 +7,10 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-
 const instructionMessages: ChatCompletionMessageParam = {
   role: "system",
   content: "You are a helpful assistant...",
 };
-
 
 export async function POST(req: Request) {
   try {
@@ -31,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     const response = await openai.chat.completions.create({
-      model: "gpt-5",
+      model: "gpt-4o", 
       messages: [instructionMessages, ...messages],
     });
 
