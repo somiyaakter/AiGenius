@@ -21,6 +21,7 @@ import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
 import { formSchema } from "./constant";
 import ReactMarkdown from "react-markdown";
+
 export default function CodePage() {
   const router = useRouter();
 
@@ -51,7 +52,6 @@ export default function CodePage() {
       setMessages((prev) => [...prev, userMessage, response.data]);
       form.reset();
     } catch (error) {
-      // TODO: open true modal
       console.log(error);
     } finally {
       router.refresh();
@@ -63,7 +63,7 @@ export default function CodePage() {
       <Heading
         title="Code Generation"
         description="Generate code using descriptive text."
-        icon={Code} 
+        icon={Code}
         iconColor="text-blue-700"
         bgColor="bg-blue-400/10"
       />
@@ -81,7 +81,7 @@ export default function CodePage() {
                     <FormControl className="m-0 p-0">
                       <Input
                         disabled={isLoading}
-                        placeholder="How do I calculate the result of a circle?"
+                        placeholder="How do I calculate the area of a circle?"
                         className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                         {...field}
                       />
@@ -102,25 +102,47 @@ export default function CodePage() {
         </div>
 
         <div className="space-y-4 my-4">
-
           {isLoading && (
             <div className="flex items-center justify-center p-8 rounded-lg bg-muted">
               <Loader />
             </div>
           )}
 
-          {messages.length === 0 && !isLoading && <Empty label="No conversation started." />}
+          {messages.length === 0 && !isLoading && (
+            <Empty label="No conversation started." />
+          )}
           <div className="flex flex-col-reverse gap-y-4">
-
-
             {messages.map((message, index) => (
-              <div key={index} className={cn("p-8 rounded-lg", message.role === "user" ? "bg-white border border-black/10" : "bg-muted")}>
-                <p>
-                  <b>{message.role}:</b> {String(message.content)}
-                </p>
+              <div
+                key={index}
+                className={cn(
+                  "p-8 flex w-full items-start gap-x-8 rounded-lg",
+                  message.role === "user"
+                    ? "bg-white border border-black/10"
+                    : "bg-muted"
+                )}
+              >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
 
-                <ReactMarkdown>{String(message.content) || ""}</ReactMarkdown>
+                <div className="text-sm overflow-hidden leading-7">
+                  <ReactMarkdown
+                    components={{
+                      pre: ({ node, ...props }) => (
+                        <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                          <pre {...props} />
+                        </div>
+                      ),
+                      code: ({ node, ...props }) => (
+                        <code
+                          className="bg-black/10 p-1 rounded-lg"
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
+                    {String(message.content) || ""}
+                  </ReactMarkdown>
+                </div>
               </div>
             ))}
           </div>
