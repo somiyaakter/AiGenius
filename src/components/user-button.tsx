@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
 import { useUser } from "@/hooks/use-user";
@@ -55,18 +55,14 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onClick={() => router.push("/profile")}
+          onClick={() => router.push("/dashboard")}
           className="flex items-center gap-2 cursor-pointer"
         >
-          <User className="h-4 w-4" /> Manage Account
+          <LayoutDashboard className="h-4 w-4" />
+          Dashboard
         </DropdownMenuItem>
 
-        <DropdownMenuItem
-          onClick={() => router.push("/settings")}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <Settings className="h-4 w-4" /> Settings
-        </DropdownMenuItem>
+     
 
         <DropdownMenuSeparator />
 
