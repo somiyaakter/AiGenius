@@ -3,15 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Montserrat } from "next/font/google";
-import {
-  ImageIcon,
-  LayoutDashboard,
-  MessageSquare,
-  VideoIcon,
-  Music,
-  Code,
-  Settings,
-} from "lucide-react";
+import { ImageIcon, LayoutDashboard, MessageSquare, Code } from "lucide-react";
 import { usePathname } from "next/navigation";
 const montserrat = Montserrat({
   subsets: ["latin"],

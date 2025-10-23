@@ -2,8 +2,6 @@
 import {
   ImageIcon,
   MessageSquare,
-  VideoIcon,
-  Music,
   Code,
   ArrowRight,
 } from "lucide-react";

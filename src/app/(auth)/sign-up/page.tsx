@@ -12,13 +12,13 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleGoogleSignUp = () => {
-    console.log("Google Sign Up");
-  };
+  // const handleGoogleSignUp = () => {
+  //   console.log("Google Sign Up");
+  // };
 
-  const handleGitHubSignUp = () => {
-    console.log("GitHub Sign Up");
-  };
+  // const handleGitHubSignUp = () => {
+  //   console.log("GitHub Sign Up");
+  // };
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
