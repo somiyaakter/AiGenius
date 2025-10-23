@@ -18,7 +18,6 @@ const montserrat = Montserrat({
   weight: ["600"],
 });
 
-
 const routes = [
   {
     label: "Dashboard",
@@ -39,31 +38,13 @@ const routes = [
     color: "text-pink-500",
   },
   {
-    label: "Video Generation",
-    icon: VideoIcon,
-    href: "/video",
-    color: "text-amber-500",
-  },
-  {
-    label: "Music Generation",
-    icon: Music,
-    href: "/music",
-    color: "text-emerald-500",
-  },
-  {
     label: "Code Generation",
     icon: Code,
     href: "/code",
-    color: "text-blue-500",
-  },
-  {     
-    label: "Settings",
-    icon: Settings,
-    href: "/settings",
+    color: "text-emerald-500",
   },
 ];
 export default function Sidebar() {
-
   const pathname = usePathname();
 
   return (

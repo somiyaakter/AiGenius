@@ -27,25 +27,11 @@ const tools = [
     bgColor: "bg-pink-700/10",
   },
   {
-    label: "Video Generation",
-    icon: VideoIcon,
-    href: "/video",
-    color: "text-amber-700",
-    bgColor: "bg-amber-700/10",
-  },
-  {
-    label: "Music Generation",
-    icon: Music,
-    href: "/music",
-    color: "text-emerald-700",
-    bgColor: "bg-emerald-700/10",
-  },
-  {
     label: "Code Generation",
     icon: Code,
     href: "/code",
-    color: "text-blue-700",
-    bgColor: "bg-blue-700/10",
+    color: "text-emerald-700",
+    bgColor: "bg-emerald-700/10",
   },
 ];
 
