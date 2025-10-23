@@ -54,7 +54,7 @@ export default function SignIn() {
           <h1 className="text-2xl font-semibold text-gray-900">Sign in</h1>
           <p className="mt-1 text-sm text-gray-600">to continue to AIGenius</p>
         </div>
-
+{/* 
         <Button
           onClick={handleGoogleSignIn}
           variant="outline"
@@ -88,12 +88,15 @@ export default function SignIn() {
           <div className="relative flex justify-center text-sm">
             <span className="px-2 bg-white text-gray-500">or</span>
           </div>
-        </div>
+        </div> */}
 
         <form onSubmit={handleEmailSignIn}>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Email address
               </Label>
               <Input
@@ -108,7 +111,10 @@ export default function SignIn() {
             </div>
 
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password
               </Label>
               <Input
@@ -122,13 +128,11 @@ export default function SignIn() {
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <Button
               type="submit"
-              className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="w-full h-11 bg-gradient-to-r from-emerald-500 to-blue-500 text-white"
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "CONTINUE"}
