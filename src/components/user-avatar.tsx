@@ -1,12 +1,23 @@
-import React from 'react'
-import { Avatar,AvatarImage } from "./ui/avatar"
+"use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUser } from "@/hooks/use-user";
 
-export default function BotAvatar() {
-  
+export default function UserAvatar() {
+  const { user } = useUser();
+  const initials =
+    (user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase()) || "U";
+
   return (
     <Avatar className="h-8 w-8">
-      <AvatarImage src="/logo.png"    />
-      
+      {user?.image && <AvatarImage src={user.image} alt={user.name ?? "User"} />}
+      <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+        {initials}
+      </AvatarFallback>
     </Avatar>
-  )
+  );
 }

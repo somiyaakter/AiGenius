@@ -1,13 +1,10 @@
-import React from "react";
-import { LoaderIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
-export default function loader() {
+export default function Loader() {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-y-4">
-         <LoaderIcon />
-          <p className="text-muted-foreground text-sm">
-              AIGenius is thinking...
-          </p>
+    <div className="flex flex-col items-center justify-center gap-3 py-6">
+      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+      <p className="text-xs text-muted-foreground">Genius is thinking…</p>
     </div>
   );
 }

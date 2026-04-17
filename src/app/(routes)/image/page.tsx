@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import { Download, ImageIcon } from "lucide-react";
+import { Download, ImageIcon, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { amountOptions, formSchema, resolutionOptions } from "./constant";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,11 +22,9 @@ import {
 import Heading from "@/components/heading";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
-import { Card, CardFooter } from "@/components/ui/card";
 
 export default function ImagePage() {
   const router = useRouter();
-
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,9 +43,7 @@ export default function ImagePage() {
     try {
       setImages([]);
       setError(null);
-
       const response = await axios.post("/api/image", values);
-
       const urls = (response.data as Array<{ url?: string; b64_json?: string }>)
         .map((img) =>
           img.url
@@ -57,7 +53,6 @@ export default function ImagePage() {
               : null
         )
         .filter((u): u is string => Boolean(u));
-
       setImages(urls);
       form.reset();
     } catch (err) {
@@ -72,57 +67,56 @@ export default function ImagePage() {
   };
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl">
       <Heading
         title="Image Generation"
-        description="Turn your prompt into an image."
+        description="Turn natural language into high-resolution images."
         icon={ImageIcon}
-        iconColor="text-pink-700"
-        bgColor="bg-pink-700/10"
       />
-      <div className="px-4 lg:px-8">
-        <div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="rounded-lg border w-full p-4 px-3 md:px-6 focus-within:shadow-sm grid grid-cols-12 gap-2"
-            >
-              <FormField
-                name="prompt"
-                render={({ field }) => (
-                  <FormItem className="col-span-12 lg:col-span-6 ">
-                    <FormControl className="m-0 p-0">
-                      <Input
-                        disabled={isLoading}
-                        placeholder="A picture of a horse in Swiss alps"
-                        className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
 
+      {/* Prompt bar */}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="rounded-xl border border-border bg-card p-3 shadow-sm transition focus-within:border-primary/40 focus-within:shadow-lift"
+        >
+          <FormField
+            name="prompt"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    disabled={isLoading}
+                    placeholder="A serene mountain lake at dawn, hyperreal, cinematic lighting"
+                    className="h-11 border-0 bg-transparent shadow-none focus-visible:ring-0"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <div className="mt-2 flex flex-col gap-2 border-t border-border pt-2 md:flex-row md:items-center">
+            <div className="flex flex-1 flex-col gap-2 sm:flex-row">
               <FormField
                 control={form.control}
                 name="amount"
                 render={({ field }) => (
-                  <FormItem className="col-span-12 lg:col-span-2">
+                  <FormItem className="flex-1">
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
                       value={field.value}
-                      defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue defaultValue={field.value} />
+                        <SelectTrigger className="h-9 text-xs">
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {amountOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        {amountOptions.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -134,22 +128,21 @@ export default function ImagePage() {
                 control={form.control}
                 name="resolution"
                 render={({ field }) => (
-                  <FormItem className="col-span-12 lg:col-span-2">
+                  <FormItem className="flex-1">
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
                       value={field.value}
-                      defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue defaultValue={field.value} />
+                        <SelectTrigger className="h-9 text-xs">
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {resolutionOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        {resolutionOptions.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -157,56 +150,73 @@ export default function ImagePage() {
                   </FormItem>
                 )}
               />
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="col-span-12 lg:col-span-2 w-full"
-              >
-                Generate
-              </Button>
-            </form>
-          </Form>
-        </div>
-
-        <div className="space-y-4 my-4">
-          {isLoading && (
-            <div className="p-20">
-              <Loader />
             </div>
-          )}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              size="sm"
+              className="h-9 rounded-lg px-4"
+            >
+              <Sparkles className="mr-2 h-3.5 w-3.5" />
+              Generate
+            </Button>
+          </div>
+        </form>
+      </Form>
 
-          {error && !isLoading && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-              {error}
-            </div>
-          )}
-          {images.length === 0 && !isLoading && !error && (
-            <Empty label="No images generated." />
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+      {/* Output */}
+      <div className="mt-6">
+        {isLoading && (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: parseInt(form.getValues("amount")) || 1 }).map(
+              (_, i) => (
+                <div
+                  key={i}
+                  className="aspect-square animate-pulse rounded-xl bg-muted"
+                />
+              )
+            )}
+          </div>
+        )}
+
+        {error && !isLoading && (
+          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        {images.length === 0 && !isLoading && !error && (
+          <Empty label="Describe an image above to generate." />
+        )}
+
+        {images.length > 0 && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {images.map((src) => (
-              <Card key={src} className="rounded-lg overflow-hidden">
+              <div
+                key={src}
+                className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt="Generated"
-                  className="aspect-square w-full object-cover"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-                <CardFooter className="p-2">
+                <div className="absolute inset-0 flex items-end justify-end bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition group-hover:opacity-100">
                   <Button
                     onClick={() => window.open(src)}
+                    size="sm"
                     variant="secondary"
-                    className="w-full"
+                    className="m-3 h-8 rounded-md text-xs backdrop-blur"
                   >
-                    <Download className="h-4 w-4 mr-2" />
+                    <Download className="mr-1.5 h-3.5 w-3.5" />
                     Download
                   </Button>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
