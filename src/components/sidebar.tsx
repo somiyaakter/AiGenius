@@ -1,74 +1,64 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Montserrat } from "next/font/google";
 import { ImageIcon, LayoutDashboard, MessageSquare, Code } from "lucide-react";
 import { usePathname } from "next/navigation";
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["600"],
-});
+import Logo from "@/components/logo";
 
 const routes = [
-  {
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    href: "/dashboard",
-    color: "text-sky-500",
-  },
-  {
-    label: "Conversation",
-    icon: MessageSquare,
-    href: "/conversation",
-    color: "text-violet-500",
-  },
-  {
-    label: "Image Generation",
-    icon: ImageIcon,
-    href: "/image",
-    color: "text-pink-500",
-  },
-  {
-    label: "Code Generation",
-    icon: Code,
-    href: "/code",
-    color: "text-emerald-500",
-  },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+  { label: "Conversation", icon: MessageSquare, href: "/conversation" },
+  { label: "Image Generation", icon: ImageIcon, href: "/image" },
+  { label: "Code Generation", icon: Code, href: "/code" },
 ];
+
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col h-full space-y-4 py-4 bg-[#111827] text-white ">
-      <div className="px-3 py-2 flex-1">
-        <Link href="/dashboard" className="flex items-center pl-3 mb-14">
-          <div className="relative w-8 h-8 mr-4">
-            <Image src="/logo.png" alt="Logo" fill className="object-contain" />
-          </div>
-          <h1 className={cn("text-xl font-bold", montserrat.className)}>
-            AIGenius
-          </h1>
+    <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+      <div className="flex-1 px-3 py-5">
+        <Link href="/dashboard" className="mb-8 block px-3">
+          <Logo size={24} />
         </Link>
 
-        <div>
-          {routes.map((route) => (
-            <Link
-              href={route.href}
-              key={route.href}
-              className={cn(
-                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition",
-                pathname === route.href
-                  ? "text-white bg-white/10"
-                  : "text-zinc-400"
-              )}
-            >
-              <div className="flex items-center flex-1">
-                <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
+        <div className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Workspace
+        </div>
+
+        <nav className="space-y-1">
+          {routes.map((route) => {
+            const active = pathname === route.href;
+            return (
+              <Link
+                href={route.href}
+                key={route.href}
+                className={cn(
+                  "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
+                  active
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                )}
+              >
+                <route.icon
+                  className={cn(
+                    "h-4 w-4 transition",
+                    active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                  )}
+                />
                 {route.label}
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="border-t border-sidebar-border p-4">
+        <div className="rounded-lg bg-accent/60 p-3 text-xs">
+          <p className="font-medium text-foreground">Upgrade to Pro</p>
+          <p className="mt-1 text-muted-foreground">
+            Unlimited generations and priority support.
+          </p>
         </div>
       </div>
     </div>
