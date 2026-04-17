@@ -16,9 +16,13 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    if (!process.env.OPENAI_API_KEY) {
+      return new NextResponse("OpenAI API key is not configured", {
+        status: 500,
+      });
+    }
 
     const { messages } = await req.json();
-
     if (!messages) {
       return new NextResponse("Messages are required", { status: 400 });
     }
@@ -31,7 +35,9 @@ export async function POST(req: Request) {
     return NextResponse.json(response.choices[0].message);
   } catch (error) {
     console.error("CONVERSATION ERROR:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    const message =
+      error instanceof Error ? error.message : "Internal Server Error";
+    return new NextResponse(message, { status: 500 });
   }
 }
 

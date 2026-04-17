@@ -22,14 +22,13 @@ import {
 import Heading from "@/components/heading";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
-import { cn } from "@/lib/utils";
 import { Card, CardFooter } from "@/components/ui/card";
-import Image from "next/image";
 
 export default function ImagePage() {
   const router = useRouter();
 
   const [images, setImages] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,16 +44,28 @@ export default function ImagePage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setImages([]);
+      setError(null);
 
       const response = await axios.post("/api/image", values);
 
-      const urls = response.data.map((image: { url: string }) => image.url);
+      const urls = (response.data as Array<{ url?: string; b64_json?: string }>)
+        .map((img) =>
+          img.url
+            ? img.url
+            : img.b64_json
+              ? `data:image/png;base64,${img.b64_json}`
+              : null
+        )
+        .filter((u): u is string => Boolean(u));
 
       setImages(urls);
       form.reset();
-    } catch (error) {
-      // TODO: open true modal
-      console.log(error);
+    } catch (err) {
+      const msg =
+        axios.isAxiosError(err) && err.response?.data
+          ? String(err.response.data)
+          : "Image generation failed. Check server logs.";
+      setError(msg);
     } finally {
       router.refresh();
     }
@@ -165,18 +176,26 @@ export default function ImagePage() {
             </div>
           )}
 
-          {images.length === 0 && !isLoading && (
+          {error && !isLoading && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+          {images.length === 0 && !isLoading && !error && (
             <Empty label="No images generated." />
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
             {images.map((src) => (
               <Card key={src} className="rounded-lg overflow-hidden">
-                <div>
-                  <Image src={src} alt="Image" fill />
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt="Generated"
+                  className="aspect-square w-full object-cover"
+                />
                 <CardFooter className="p-2">
                   <Button
-                    onClick={() =>window.open(src)}
+                    onClick={() => window.open(src)}
                     variant="secondary"
                     className="w-full"
                   >
